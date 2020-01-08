@@ -43,6 +43,28 @@ jobs:
         echo
         echo "installing local-path provisioner ..."
         kubectl delete storageclass --all
-        kubectl apply -f https://github.com/rancher/local-path-provisioner/raw/v0.0.11/deploy/local-path-storage.yaml
+        kubectl apply -f https://github.com/kmodules/local-path-provisioner/raw/k-1.11/deploy/local-path-storage.yaml
         kubectl wait --for=condition=Ready pods -n local-path-storage --all --timeout=5m
         kubectl apply -f hack/kubernetes/storageclass/standard.yaml
+
+    - name: Test
+      run: |
+        echo ">>> run pod"
+        kubectl apply -f hack/kubernetes/pod.yaml
+        echo ">>> get pod"
+        for i in {1..12}; do kubectl get pod;echo;sleep 5; done
+        echo
+        echo ">>> get pod"
+        kubectl get pod volume-test -o go-template="{{range .status.containerStatuses}}{{.lastState.terminated.message}}{{end}}"
+        echo
+        echo ">>> describe pod"
+        kubectl get pod -n default volume-test -o yaml
+        echo
+        echo ">>> show pod logs"
+        kubectl logs -n default volume-test
+        echo
+        kubectl get pvc -o yaml
+        echo
+        kubectl get pv -o yaml
+        echo
+        kubectl get nodes
