@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - 'release-*'
+    tags-ignore:
+      - '*.*'
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cluster:
+        - {"version": "v1.11.10", "config": "kind-1.11.yaml"}
+        - {"version": "v1.12.10", "config": "kind.yaml"}
+        # [v1.11.10, v1.12.10, v1.14.6, v1.16.3, v1.17.0]
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Create Kubernetes ${{ matrix.cluster.version }} cluster
+      id: kind
+      uses: engineerd/setup-kind@v0.1.0
+      with:
+        version: v0.6.1
+        config: hack/kubernetes/${{ matrix.cluster.config }}
+        image: kindest/node:${{ matrix.cluster.version }}
+
+    - name: Prepare cluster for testing
+      id: local-path
+      run: |
+        kubectl version
