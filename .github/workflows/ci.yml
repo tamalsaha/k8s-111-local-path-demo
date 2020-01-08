@@ -32,11 +32,8 @@ jobs:
     - name: Prepare cluster for testing
       id: local-path
       run: |
+        echo
         kubectl version
-
-    - name: Prepare cluster for testing
-      id: local-path
-      run: |
         echo "waiting for nodes to be ready ..."
         kubectl wait --for=condition=Ready nodes --all --timeout=5m
         kubectl get nodes
