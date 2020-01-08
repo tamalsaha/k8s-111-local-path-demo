@@ -32,3 +32,4 @@ spec:
   - name: volv
     persistentVolumeClaim:
       claimName: local-path-pvc
+  restartPolicy: Never
