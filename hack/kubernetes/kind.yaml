@@ -19,34 +19,6 @@ nodes:
       readOnly: false
 kubeadmConfigPatches:
 - |
-  kind: ClusterConfiguration
-  metadata:
-    name: config
-  apiServer:
-    extraArgs:
-      "feature-gates": "DynamicProvisioningScheduling=true"
-  scheduler:
-    extraArgs:
-      "feature-gates": "DynamicProvisioningScheduling=true"
-  controllerManager:
-    extraArgs:
-      "feature-gates": "DynamicProvisioningScheduling=true"
-- |
-  kind: InitConfiguration
-  metadata:
-    name: config
-  nodeRegistration:
-    kubeletExtraArgs:
-      "feature-gates": "DynamicProvisioningScheduling=true"
-- |
-  kind: KubeletConfiguration
-  featureGates:
-    DynamicProvisioningScheduling: true
-- |
-  kind: KubeProxyConfiguration
-  featureGates:
-    DynamicProvisioningScheduling: true
-- |
   kind: MasterConfiguration
   apiServerExtraArgs:
     "feature-gates": "DynamicProvisioningScheduling=true"
